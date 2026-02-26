@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Game Chiến Đấu 1v1</title>
+<style>
+body {
+    margin: 0;
+    background: #222;
+    overflow: hidden;
+    font-family: Arial;
+}
+
+#game {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+.player {
+    width: 60px;
+    height: 100px;
+    position: absolute;
+    bottom: 0;
+    border-radius: 10px;
+}
+
+#p1 { background: red; left: 200px; }
+#p2 { background: blue; left: 800px; }
+
+.health {
+    position: absolute;
+    top: 20px;
+    width: 300px;
+    height: 20px;
+    background: grey;
+}
+
+#hp1 { left: 20px; }
+#hp2 { right: 20px; }
+
+.bar {
+    height: 100%;
+    background: lime;
+}
+
+#winner {
+    position: absolute;
+    top: 40%;
+    width: 100%;
+    text-align: center;
+    font-size: 40px;
+    color: white;
+    display: none;
+}
+
+button {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    font-size: 20px;
+    display: none;
+}
+</style>
+</head>
+<body>
+
+<div id="game">
+    <div id="p1" class="player"></div>
+    <div id="p2" class="player"></div>
+
+    <div id="hp1" class="health"><div class="bar" id="bar1"></div></div>
+    <div id="hp2" class="health"><div class="bar" id="bar2"></div></div>
+
+    <div id="winner"></div>
+    <button onclick="resetGame()">Chơi Lại</button>
+</div>
+
+<script>
+let p1 = document.getElementById("p1");
+let p2 = document.getElementById("p2");
+let bar1 = document.getElementById("bar1");
+let bar2 = document.getElementById("bar2");
+let winnerText = document.getElementById("winner");
+let button = document.querySelector("button");
+
+let p1Pos = 200;
+let p2Pos = 800;
+let hp1 = 100;
+let hp2 = 100;
+
+function update() {
+    p1.style.left = p1Pos + "px";
+    p2.style.left = p2Pos + "px";
+    bar1.style.width = hp1 + "%";
+    bar2.style.width = hp2 + "%";
+
+    if (hp1 <= 0) endGame("Player 2 Thắng!");
+    if (hp2 <= 0) endGame("Player 1 Thắng!");
+}
+
+function endGame(text) {
+    winnerText.innerText = text;
+    winnerText.style.display = "block";
+    button.style.display = "block";
+}
+
+function resetGame() {
+    hp1 = 100;
+    hp2 = 100;
+    p1Pos = 200;
+    p2Pos = 800;
+    winnerText.style.display = "none";
+    button.style.display = "none";
+    update();
+}
+
+document.addEventListener("keydown", function(e) {
+    // Player 1
+    if (e.key === "a") p1Pos -= 20;
+    if (e.key === "d") p1Pos += 20;
+    if (e.key === "f") {
+        if (Math.abs(p1Pos - p2Pos) < 80) hp2 -= 10;
+    }
+
+    // Player 2
+    if (e.key === "ArrowLeft") p2Pos -= 20;
+    if (e.key === "ArrowRight") p2Pos += 20;
+    if (e.key === "l") {
+        if (Math.abs(p1Pos - p2Pos) < 80) hp1 -= 10;
+    }
+
+    update();
+});
+
+update();
+</script>
+
+</body>
+</html>
